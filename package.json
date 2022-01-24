@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/cilantrodreams/tinyapp/issues"
   },
-  "homepage": "https://github.com/cilantrodreams/tinyapp#readme"
+  "homepage": "https://github.com/cilantrodreams/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
 }
