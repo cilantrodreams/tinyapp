@@ -11,9 +11,9 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-function generateRandomString() {
+const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
-}
+};
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -28,18 +28,15 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  console.log("In callback for /urls endpoint")
   const templateVars = { urls: urlDatabase };
   res.render('urls_index', templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  console.log("in callback for /urls/new route");
   res.render('urls_new');
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  console.log("In callback for /urls/:shortURL endpoint");
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
@@ -50,10 +47,8 @@ app.get('/u/:shortURL', (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
-  console.log(urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
