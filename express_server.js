@@ -28,7 +28,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  console.log(urlDatabase[req.params.shortURL]);
+  console.log("In callback for /urls/:shortURL endpoint");
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
