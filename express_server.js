@@ -27,11 +27,17 @@ app.get("/urls", (req, res) => {
   res.render('urls_index', templateVars);
 });
 
+app.get("/urls/new", (req, res) => {
+  console.log("in callback for /urls/new route");
+  res.render('urls_new');
+});
+
 app.get("/urls/:shortURL", (req, res) => {
   console.log("In callback for /urls/:shortURL endpoint");
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
