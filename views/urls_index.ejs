@@ -19,17 +19,16 @@
         <tr>
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
+          <th scope="col">Delete</th>
         </tr>
       </thead>
       <tbody>
         <% for(let url in urls) { %>
         <tr>
+          <td><%= url %></td>
+          <td><%= urls[url] %></td>
           <td>
-            <%= url %>
-          </td>
-          <td>
-            <%= urls[url] %>
-          </td>
+            <input name="delete" id="delete" type="button" value="Delete">
         </tr>
         <% } %>
       </tbody>
