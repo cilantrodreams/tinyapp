@@ -7,11 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
     integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>Document</title>
+  <title>TinyApp Registration</title>
 </head>
 
 <body>
-
+  <%- include('partials/_header') %>
+  <form action="/register" method="post">
+    <input type="email" name="email" id="email">
+    <input type="password" name="password" id="password">
+  </form>
 </body>
 
 </html>
