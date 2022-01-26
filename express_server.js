@@ -16,6 +16,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
+
 // Helper function for generating random strings
 const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
@@ -101,6 +114,12 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   res.clearCookie("username");
   res.redirect('/urls');
+});
+
+app.post('/register', (req, res) => {
+  console.log(req.body);
+  res.redirect('/register');
+  res.end();
 });
 
 app.listen(PORT, () => {
