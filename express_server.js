@@ -117,12 +117,16 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
+  // create and add user
   const newUserId = generateRandomString();
   const newUser = { id: newUserId };
   Object.assign(newUser, req.body);
   users[newUserId] = newUser;
-  console.log(users);
-  res.redirect('/register');
+
+  // set cookie to newly created user
+  res.cookie('user_id', newUserId);
+
+  res.redirect('/urls');
   res.end();
 });
 
