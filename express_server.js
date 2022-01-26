@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 app.set('view engine', 'ejs');
 
 const urlDatabase = {
@@ -13,9 +12,15 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+/**
+ * Helper function to randomly generate generate strings used for short URLS
+ * @returns a randomly generated 6 digit string
+ */
 const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
 };
+
+//GET ROUTES
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -57,6 +62,16 @@ app.get('/u/:shortURL', (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
+
+app.get('/register', (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"]
+  }
+  res.render("register", templateVars);
+  res.end();
+});
+
+// POST ROUTES
 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
