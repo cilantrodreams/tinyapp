@@ -1,21 +1,22 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.set('view engine', 'ejs');
+
+// Middleware
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+// Data stores
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-/**
- * Helper function to randomly generate generate strings used for short URLS
- * @returns a randomly generated 6 digit string
- */
+// Helper function for generating random strings
 const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
 };
