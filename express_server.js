@@ -29,7 +29,7 @@ const users = {
   }
 }
 
-// Helper function for generating random strings
+// Helper function for generating random 6 char strings
 const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
 };
@@ -117,7 +117,11 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  console.log(req.body);
+  const newUserId = generateRandomString();
+  const newUser = { id: newUserId };
+  Object.assign(newUser, req.body);
+  users[newUserId] = newUser;
+  console.log(users);
   res.redirect('/register');
   res.end();
 });
