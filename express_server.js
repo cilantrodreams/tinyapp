@@ -29,9 +29,19 @@ const users = {
   }
 }
 
-// Helper function for generating random 6 char strings
+// Helper functions
+
 const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
+};
+
+const validEmail = function(newEmail) {
+  for (const user in users) {
+    if (newEmail === users[user].email) {
+      return false;
+    }
+  }
+  return true;
 };
 
 //GET ROUTES
@@ -81,7 +91,6 @@ app.get('/register', (req, res) => {
   const templateVars = {
     user: users[req.cookies["user_id"]]
   }
-  console.log(users);
   res.render("register", templateVars);
   res.end();
 });
@@ -118,8 +127,10 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  // check if all form inputs were filled out
+  // check if all form inputs are valid
   if (!req.body.email || !req.body.password) {
+    res.sendStatus(400);
+  } else if (!validEmail(req.body.email)) {
     res.sendStatus(400);
   } else {
     // create and add user
