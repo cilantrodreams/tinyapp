@@ -81,6 +81,7 @@ app.get('/register', (req, res) => {
   const templateVars = {
     user: users[req.cookies["user_id"]]
   }
+  console.log(users);
   res.render("register", templateVars);
   res.end();
 });
@@ -117,17 +118,22 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  // create and add user
-  const newUserId = generateRandomString();
-  const newUser = { id: newUserId };
-  Object.assign(newUser, req.body);
-  users[newUserId] = newUser;
+  // check if all form inputs were filled out
+  if (!req.body.email || !req.body.password) {
+    res.sendStatus(400);
+  } else {
+    // create and add user
+    const newUserId = generateRandomString();
+    const newUser = { id: newUserId };
+    Object.assign(newUser, req.body);
+    users[newUserId] = newUser;
 
-  // set cookie to newly created user
-  res.cookie('user_id', newUserId);
+    // set cookie to newly created user
+    res.cookie('user_id', newUserId);
 
-  res.redirect('/urls');
-  res.end();
+    res.redirect('/urls');
+    res.end();
+  };
 });
 
 app.listen(PORT, () => {
