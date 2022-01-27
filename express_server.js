@@ -90,8 +90,16 @@ app.get('/u/:shortURL', (req, res) => {
 app.get('/register', (req, res) => {
   const templateVars = {
     user: users[req.cookies["user_id"]]
-  }
+  };
   res.render("register", templateVars);
+  res.end();
+});
+
+app.get('/login', (req, res) => {
+  const templateVars = {
+    user: users[req.cookies["user_id"]]
+  };
+  res.render("login", templateVars);
   res.end();
 });
 
