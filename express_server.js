@@ -35,13 +35,13 @@ const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
 };
 
-const validEmail = function(newEmail) {
+const findEmail = function(newEmail) {
   for (const user in users) {
     if (newEmail === users[user].email) {
-      return false;
+      return true;
     }
   }
-  return true;
+  return false;
 };
 
 //GET ROUTES
@@ -125,7 +125,7 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  res.cookie("username", req.body.username);
+  res.cookie("user_id",);
   res.redirect('/urls');
 });
 
@@ -138,7 +138,7 @@ app.post('/register', (req, res) => {
   // check if all form inputs are valid
   if (!req.body.email || !req.body.password) {
     res.sendStatus(400);
-  } else if (!validEmail(req.body.email)) {
+  } else if (findEmail(req.body.email)) {
     res.sendStatus(400);
   } else {
     // create and add user
