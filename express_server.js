@@ -75,10 +75,16 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  // check if user is logged in
+  if (!req.cookies["user_id"]) {
+    return res.sendStatus(403);
+  }
+
   const templateVars = {
     user: users[req.cookies["user_id"]],
     urls: urlDatabase
   };
+
   res.render('urls_index', templateVars);
 });
 
