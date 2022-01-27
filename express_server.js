@@ -60,6 +60,16 @@ const getUserbyEmail = function(newEmail) {
   return currentUser;
 };
 
+const urlsForUser = function(id) {
+  const userURLS = {};
+  for (const url in urlDatabase) {
+    if (urlDatabase[url].userID === id) {
+      userURLS[url] = urlDatabase[url];
+    }
+  }
+  return userURLS;
+}
+
 //GET ROUTES
 
 app.get("/", (req, res) => {
@@ -76,13 +86,17 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   // check if user is logged in
-  if (!req.cookies["user_id"]) {
+  const userID = req.cookies["user_id"];
+  if (!userID) {
     return res.sendStatus(403);
   }
 
+  //filter url database for user's urls
+  const userURLs = urlsForUser(userID);
+
   const templateVars = {
-    user: users[req.cookies["user_id"]],
-    urls: urlDatabase
+    user: users[userID],
+    urls: userURLs
   };
 
   res.render('urls_index', templateVars);
