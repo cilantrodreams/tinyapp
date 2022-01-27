@@ -206,13 +206,14 @@ app.post('/urls/:id', (req, res) => {
 app.post('/login', (req, res) => {
   let currentUser = getUserbyEmail(req.body.email);
   if (!currentUser.id) {
-    res.sendStatus(403);
-  } else if (currentUser.password !== req.body.password) {
-    res.sendStatus(403);
-  } else {
-    res.cookie("user_id", currentUser.id);
-    res.redirect('/urls');
+    return res.sendStatus(403);
   }
+  if (!bcrypt.compareSync(req.body.password, currentUser.hashedPassword)) {
+    return res.sendStatus(403);
+  }
+  res.cookie("user_id", currentUser.id);
+  res.redirect('/urls');
+
 });
 
 app.post('/logout', (req, res) => {
@@ -233,7 +234,6 @@ app.post('/register', (req, res) => {
     newUser['email'] = req.body.email;
     newUser['hashedPassword'] = bcrypt.hashSync(req.body.password, 10);
     users[newUserId] = newUser;
-    console.log(users);
     // set cookie to newly created user
     res.cookie('user_id', newUserId);
 
