@@ -129,8 +129,10 @@ app.post("/urls", (req, res) => {
   if (!req.cookies["user_id"]) {
     res.sendStatus(403);
   } else {
+    const newURL = {};
     const shortURL = generateRandomString();
-    urlDatabase[shortURL] = req.body.longURL;
+    newURL["longURL"] = req.body.longURL;
+    urlDatabase[shortURL] = newURL;
     res.redirect(`/urls/${shortURL}`);
   }
 });
