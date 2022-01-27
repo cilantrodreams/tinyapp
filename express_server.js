@@ -6,8 +6,13 @@ app.set('view engine', 'ejs');
 // Middleware
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
+// const cookieParser = require('cookie-parser');
+// app.use(cookieParser());
+const cookieSession = require('cookie-session');
+app.use(cookieSession({
+  name: 'session',
+  keys: ["mama, i just killed a man, put a gun against his head, pulled my trigger now he's dead"]
+}));
 const bcrypt = require('bcryptjs');
 
 // Data stores
@@ -87,7 +92,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   // check if user is logged in
-  const userID = req.cookies["user_id"];
+  const userID = req.session.user_id;
   if (!userID) {
     return res.sendStatus(403);
   }
@@ -104,11 +109,11 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if (!req.cookies["user_id"]) {
+  if (!req.session.user_id) {
     res.redirect('/login');
   } else {
     const templateVars = {
-      user: users[req.cookies["user_id"]],
+      user: users[req.session.user_id],
     };
     res.render('urls_new', templateVars);
   }
@@ -116,7 +121,7 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   // check if user is logged in
-  const userID = req.cookies["user_id"];
+  const userID = req.session.user_id;
   if (!userID) {
     return res.sendStatus(403);
   }
@@ -143,7 +148,7 @@ app.get('/u/:shortURL', (req, res) => {
 
 app.get('/register', (req, res) => {
   const templateVars = {
-    user: users[req.cookies["user_id"]]
+    user: users[req.session.user_id]
   };
   res.render("register", templateVars);
   res.end();
@@ -151,7 +156,7 @@ app.get('/register', (req, res) => {
 
 app.get('/login', (req, res) => {
   const templateVars = {
-    user: users[req.cookies["user_id"]]
+    user: users[req.session.user_id]
   };
   res.render("login", templateVars);
   res.end();
@@ -160,7 +165,7 @@ app.get('/login', (req, res) => {
 // POST ROUTES
 
 app.post("/urls", (req, res) => {
-  if (!req.cookies["user_id"]) {
+  if (!req.session.user_id) {
     return res.sendStatus(403);
   }
   const newURL = {};
@@ -172,7 +177,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
-  const userID = req.cookies["user_id"];
+  const userID = req.session.user_id;
   if (!userID) {
     return res.sendStatus(403);
   }
@@ -188,7 +193,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 });
 
 app.post('/urls/:id', (req, res) => {
-  const userID = req.cookies["user_id"];
+  const userID = req.session.user_id;
   if (!userID) {
     return res.sendStatus(403);
   }
@@ -211,7 +216,7 @@ app.post('/login', (req, res) => {
   if (!bcrypt.compareSync(req.body.password, currentUser.hashedPassword)) {
     return res.sendStatus(403);
   }
-  res.cookie("user_id", currentUser.id);
+  req.session.user_id = currentUser.id;
   res.redirect('/urls');
 
 });
@@ -235,7 +240,7 @@ app.post('/register', (req, res) => {
     newUser['hashedPassword'] = bcrypt.hashSync(req.body.password, 10);
     users[newUserId] = newUser;
     // set cookie to newly created user
-    res.cookie('user_id', newUserId);
+    req.session.user_id = newUserId;
 
     res.redirect('/urls');
     res.end();
