@@ -45,13 +45,13 @@ const findEmail = function(newEmail) {
 };
 
 const getUserbyEmail = function(newEmail) {
-  let user = {};
+  let currentUser = {};
   for (const user in users) {
     if (newEmail === users[user].email) {
-      user = Object.assign(users[user]);
+      currentUser = Object.assign(users[user]);
     }
   }
-  return user;
+  return currentUser;
 };
 
 //GET ROUTES
@@ -135,13 +135,15 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  console.log(req.body);
   let currentUser = getUserbyEmail(req.body.email);
-
-
-  // res.cookie("user_id",)
-  // res.cookie("user_id", );
-  res.redirect('/urls');
+  if (!currentUser.id) {
+    res.sendStatus(403);
+  } else if (currentUser.password !== req.body.password) {
+    res.sendStatus(403);
+  } else {
+    res.cookie("user_id", currentUser.id);
+    res.redirect('/urls');
+  }
 });
 
 app.post('/logout', (req, res) => {
