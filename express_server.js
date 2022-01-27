@@ -160,24 +160,43 @@ app.get('/login', (req, res) => {
 
 app.post("/urls", (req, res) => {
   if (!req.cookies["user_id"]) {
-    res.sendStatus(403);
-  } else {
-    const newURL = {};
-    const shortURL = generateRandomString();
-    newURL["longURL"] = req.body.longURL;
-    urlDatabase[shortURL] = newURL;
-    res.redirect(`/urls/${shortURL}`);
+    return res.sendStatus(403);
   }
+  const newURL = {};
+  const shortURL = generateRandomString();
+  newURL["longURL"] = req.body.longURL;
+  urlDatabase[shortURL] = newURL;
+  res.redirect(`/urls/${shortURL}`);
+
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
+  const userID = req.cookies["user_id"];
+  if (!userID) {
+    return res.sendStatus(403);
+  }
   const shortURL = req.params.shortURL;
+  console.log('userID:', userID)
+  console.log('urlDatabase[shortURL].userID:', urlDatabase[shortURL].userID);
+  if (userID !== urlDatabase[shortURL].userID) {
+    return res.sendStatus(403);
+  }
+
   delete urlDatabase[shortURL];
   res.redirect(`/urls`);
 });
 
 app.post('/urls/:id', (req, res) => {
+  const userID = req.cookies["user_id"];
+  if (!userID) {
+    return res.sendStatus(403);
+  }
   const shortURL = req.params.id;
+  console.log('userID:', userID)
+  console.log('urlDatabase[shortURL].userID:', urlDatabase[shortURL].userID);
+  if (userID !== urlDatabase[shortURL].userID) {
+    return res.sendStatus(403);
+  }
   const longURL = req.body.longURL;
   urlDatabase[shortURL].longURL = longURL;
   res.redirect(`/urls`);
