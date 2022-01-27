@@ -125,7 +125,18 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  res.cookie("user_id",);
+  console.log(req.body);
+  let currentUser = {};
+  if (findEmail(req.body.email)) {
+    for (const user in users) {
+      if (users[user].email === req.body.email) {
+        currentUser = Object.assign(users[user]);
+      }
+    }
+  }
+
+  // res.cookie("user_id",)
+  // res.cookie("user_id", );
   res.redirect('/urls');
 });
 
