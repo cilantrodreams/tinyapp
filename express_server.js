@@ -120,9 +120,13 @@ app.get('/login', (req, res) => {
 // POST ROUTES
 
 app.post("/urls", (req, res) => {
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(`/urls/${shortURL}`);
+  if (!req.cookies["user_id"]) {
+    res.sendStatus(403);
+  } else {
+    const shortURL = generateRandomString();
+    urlDatabase[shortURL] = req.body.longURL;
+    res.redirect(`/urls/${shortURL}`);
+  }
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
