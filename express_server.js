@@ -230,9 +230,10 @@ app.post('/register', (req, res) => {
     // create and add user
     const newUserId = generateRandomString();
     const newUser = { id: newUserId };
-    Object.assign(newUser, req.body);
+    newUser['email'] = req.body.email;
+    newUser['hashedPassword'] = bcrypt.hashSync(req.body.password, 10);
     users[newUserId] = newUser;
-
+    console.log(users);
     // set cookie to newly created user
     res.cookie('user_id', newUserId);
 
