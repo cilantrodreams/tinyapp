@@ -114,10 +114,23 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  // check if user is logged in
+  const userID = req.cookies["user_id"];
+  if (!userID) {
+    return res.sendStatus(403);
+  }
+
+  // check if correct user is logged in
+  const shortURL = req.params.shortURL;
+  console.log('userID:', userID)
+  console.log('urlDatabase[shortURL].userID:', urlDatabase[shortURL].userID);
+  if (userID !== urlDatabase[shortURL].userID) {
+    return res.sendStatus(403);
+  }
   const templateVars = {
-    user: users[req.cookies["user_id"]],
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL
+    user: users[userID],
+    shortURL,
+    longURL: urlDatabase[shortURL].longURL
   };
   res.render("urls_show", templateVars);
 });
