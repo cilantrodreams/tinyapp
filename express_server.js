@@ -44,6 +44,16 @@ const findEmail = function(newEmail) {
   return false;
 };
 
+const getUserbyEmail = function(newEmail) {
+  let user = {};
+  for (const user in users) {
+    if (newEmail === users[user].email) {
+      user = Object.assign(users[user]);
+    }
+  }
+  return user;
+};
+
 //GET ROUTES
 
 app.get("/", (req, res) => {
@@ -126,14 +136,8 @@ app.post('/urls/:id', (req, res) => {
 
 app.post('/login', (req, res) => {
   console.log(req.body);
-  let currentUser = {};
-  if (findEmail(req.body.email)) {
-    for (const user in users) {
-      if (users[user].email === req.body.email) {
-        currentUser = Object.assign(users[user]);
-      }
-    }
-  }
+  let currentUser = getUserbyEmail(req.body.email);
+
 
   // res.cookie("user_id",)
   // res.cookie("user_id", );
