@@ -59,16 +59,6 @@ const findEmail = function(newEmail) {
   return false;
 };
 
-// const getUserByEmail = function(email, database) {
-//   let user = {};
-//   for (const data in database) {
-//     if (email === database[data].email) {
-//       user = database[data];
-//     }
-//   }
-//   return user;
-// };
-
 const urlsForUser = function(id) {
   const userURLS = {};
   for (const url in urlDatabase) {
