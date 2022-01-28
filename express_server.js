@@ -43,6 +43,9 @@ const users = {
 
 // Helper functions
 
+const helpers = require('./helpers');
+const getUserByEmail = helpers.getUserByEmail;
+
 const generateRandomString = function() {
   return Math.random().toString(36).slice(2, 8);
 };
@@ -56,15 +59,15 @@ const findEmail = function(newEmail) {
   return false;
 };
 
-const getUserByEmail = function(email, database) {
-  let user = {};
-  for (const data in database) {
-    if (email === database[data].email) {
-      user = database[data];
-    }
-  }
-  return user;
-};
+// const getUserByEmail = function(email, database) {
+//   let user = {};
+//   for (const data in database) {
+//     if (email === database[data].email) {
+//       user = database[data];
+//     }
+//   }
+//   return user;
+// };
 
 const urlsForUser = function(id) {
   const userURLS = {};
