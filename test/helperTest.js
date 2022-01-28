@@ -39,7 +39,7 @@ describe('getUserByEmail', function() {
     assert.strictEqual(user.id, expectedUserID);
   });
   it('should return undefined if user not found', function() {
-    const user = getUserByEmail("notauser@example.com", testUsers)
+    const user = getUserByEmail("notauser@example.com", testUsers);
     const expectedUser = undefined;
     assert.deepEqual(user, expectedUser);
   });
@@ -49,7 +49,7 @@ describe('generateRandomString', function() {
   it('should return a string with 6 characters', function() {
     const string = generateRandomString();
     const expectedLength = 6;
-    assert.strictEqual(string.length, 6);
+    assert.strictEqual(string.length, expectedLength);
   });
 });
 
