@@ -7,7 +7,7 @@ const cookieSession = require('cookie-session');
 const generateUserHelpers = require('./helpers');
 const bcrypt = require('bcryptjs');
 
-// Middleware
+// Set middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'session',
@@ -38,7 +38,7 @@ const users = {
     email: "user2@example.com",
     hashedPassword: bcrypt.hashSync("dishwasher-funk", 10),
   }
-}
+};
 
 // Helper functions
 
@@ -65,7 +65,6 @@ app.get("/urls", (req, res) => {
   if (!userID) {
     return res.sendStatus(403);
   }
-
   //filter url database for user's urls
   const userURLs = urlsForUser(userID);
 
@@ -73,19 +72,19 @@ app.get("/urls", (req, res) => {
     user: users[userID],
     urls: userURLs
   };
-
   res.render('urls_index', templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  if (!req.session.user_id) {
-    res.redirect('/login');
-  } else {
-    const templateVars = {
-      user: users[req.session.user_id],
-    };
-    res.render('urls_new', templateVars);
+  const userID = req.session.user_id;
+  if (!userID) {
+    return res.redirect('/login');
   }
+  const templateVars = {
+    user: users[req.session.user_id],
+  };
+  res.render('urls_new', templateVars);
+
 });
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -97,8 +96,6 @@ app.get("/urls/:shortURL", (req, res) => {
 
   // check if correct user is logged in
   const shortURL = req.params.shortURL;
-  console.log('userID:', userID)
-  console.log('urlDatabase[shortURL].userID:', urlDatabase[shortURL].userID);
   if (userID !== urlDatabase[shortURL].userID) {
     return res.sendStatus(403);
   }
@@ -166,8 +163,6 @@ app.post('/urls/:id', (req, res) => {
     return res.sendStatus(403);
   }
   const shortURL = req.params.id;
-  console.log('userID:', userID)
-  console.log('urlDatabase[shortURL].userID:', urlDatabase[shortURL].userID);
   if (userID !== urlDatabase[shortURL].userID) {
     return res.sendStatus(403);
   }
@@ -217,5 +212,5 @@ app.post('/register', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`TinyApp listening on port ${PORT}!`);
 });
