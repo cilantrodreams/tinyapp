@@ -87,7 +87,7 @@ app.get("/urls/new", (req, res) => {
 
 });
 
-app.get("/urls/:shortURL", (req, res) => {
+app.get("/urls/:id", (req, res) => {
   // check if user is logged in
   const userID = req.session.user_id;
   if (!userID) {
@@ -95,10 +95,11 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 
   // check if correct user is logged in
-  const shortURL = req.params.shortURL;
+  const shortURL = req.params.id;
   if (userID !== urlDatabase[shortURL].userID) {
     return res.sendStatus(403);
   }
+
   const templateVars = {
     user: users[userID],
     shortURL,
