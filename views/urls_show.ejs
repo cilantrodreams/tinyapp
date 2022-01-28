@@ -23,7 +23,7 @@
   <div class="card text-center">
     <h5>Edit</h5>
     <form method="POST" action="/urls/<%= shortURL %>">
-      <input name="longURL" id="longURL" type="text" value="http://">
+      <input name="longURL" id="longURL" type="text" value="<%= longURL %>">
       <button type="submit">Submit</button>
     </form>
   </div>
