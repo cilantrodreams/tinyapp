@@ -1,8 +1,8 @@
-const getUserByEmail = function(email, database) {
+const getUserByEmail = function(email, users) {
   let user = undefined;
-  for (const data in database) {
-    if (email === database[data].email) {
-      user = database[data];
+  for (const data in users) {
+    if (email === users[data].email) {
+      user = users[data];
     }
   }
   return user;
