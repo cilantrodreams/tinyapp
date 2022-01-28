@@ -22,9 +22,9 @@ const generateUserHelpers = (users, urlDatabase) => {
       }
     }
     return userURLS;
-  }
+  };
 
-  return { getUserByEmail, generateRandomString, urlsForUser }
+  return { getUserByEmail, generateRandomString, urlsForUser };
 };
 
 module.exports = generateUserHelpers;
