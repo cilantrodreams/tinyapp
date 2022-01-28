@@ -2,18 +2,17 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 app.set('view engine', 'ejs');
+const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const generateUserHelpers = require('./helpers');
+const bcrypt = require('bcryptjs');
 
 // Middleware
-const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
-// const cookieParser = require('cookie-parser');
-// app.use(cookieParser());
-const cookieSession = require('cookie-session');
 app.use(cookieSession({
   name: 'session',
   keys: ["mama, i just killed a man, put a gun against his head, pulled my trigger now he's dead"]
 }));
-const bcrypt = require('bcryptjs');
 
 // Data stores
 
@@ -43,31 +42,11 @@ const users = {
 
 // Helper functions
 
-const helpers = require('./helpers');
-const getUserByEmail = helpers.getUserByEmail;
-
-const generateRandomString = function() {
-  return Math.random().toString(36).slice(2, 8);
-};
-
-const findEmail = function(newEmail) {
-  for (const user in users) {
-    if (newEmail === users[user].email) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const urlsForUser = function(id) {
-  const userURLS = {};
-  for (const url in urlDatabase) {
-    if (urlDatabase[url].userID === id) {
-      userURLS[url] = urlDatabase[url];
-    }
-  }
-  return userURLS;
-}
+const {
+  getUserByEmail,
+  generateRandomString,
+  urlsForUser
+} = generateUserHelpers(users, urlDatabase);
 
 //GET ROUTES
 
@@ -203,7 +182,7 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  let user = getUserByEmail(req.body.email, users);
+  let user = getUserByEmail(req.body.email);
   if (!user.id) {
     return res.sendStatus(403);
   }
@@ -223,22 +202,23 @@ app.post('/logout', (req, res) => {
 app.post('/register', (req, res) => {
   // check if all form inputs are valid
   if (!req.body.email || !req.body.password) {
-    res.sendStatus(400);
-  } else if (findEmail(req.body.email)) {
-    res.sendStatus(400);
-  } else {
-    // create and add user
-    const newUserId = generateRandomString();
-    const newUser = { id: newUserId };
-    newUser['email'] = req.body.email;
-    newUser['hashedPassword'] = bcrypt.hashSync(req.body.password, 10);
-    users[newUserId] = newUser;
-    // set cookie to newly created user
-    req.session.user_id = newUserId;
+    return res.sendStatus(400);
+  }
+  if (getUserByEmail(req.body.email)) {
+    return res.sendStatus(400);
+  }
+  // create and add user
+  const newUserId = generateRandomString();
+  const newUser = { id: newUserId };
+  newUser['email'] = req.body.email;
+  newUser['hashedPassword'] = bcrypt.hashSync(req.body.password, 10);
+  users[newUserId] = newUser;
+  // set cookie to newly created user
+  req.session.user_id = newUserId;
 
-    res.redirect('/urls');
-    res.end();
-  };
+  res.redirect('/urls');
+  res.end();
+
 });
 
 app.listen(PORT, () => {
