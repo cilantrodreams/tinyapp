@@ -51,7 +51,12 @@ const {
 //GET ROUTES
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  // redirect depending on user login status
+  const userID = req.session.user_id;
+  if (userID) {
+    return res.redirect('/urls');
+  }
+  res.redirect('/login');
 });
 
 app.get("/urls.json", (req, res) => {
