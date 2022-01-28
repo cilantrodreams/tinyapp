@@ -56,14 +56,14 @@ const findEmail = function(newEmail) {
   return false;
 };
 
-const getUserbyEmail = function(newEmail) {
-  let currentUser = {};
-  for (const user in users) {
-    if (newEmail === users[user].email) {
-      currentUser = Object.assign(users[user]);
+const getUserByEmail = function(email, database) {
+  let user = {};
+  for (const data in database) {
+    if (email === database[data].email) {
+      user = database[data];
     }
   }
-  return currentUser;
+  return user;
 };
 
 const urlsForUser = function(id) {
@@ -210,14 +210,14 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  let currentUser = getUserbyEmail(req.body.email);
-  if (!currentUser.id) {
+  let user = getUserByEmail(req.body.email, users);
+  if (!user.id) {
     return res.sendStatus(403);
   }
-  if (!bcrypt.compareSync(req.body.password, currentUser.hashedPassword)) {
+  if (!bcrypt.compareSync(req.body.password, user.hashedPassword)) {
     return res.sendStatus(403);
   }
-  req.session.user_id = currentUser.id;
+  req.session.user_id = user.id;
   res.redirect('/urls');
 
 });
